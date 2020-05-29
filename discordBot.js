@@ -53,8 +53,12 @@ botDiscord.on('message', function(message){
 // Donne un rôle et souhaite bienvenue à chaque nouvel utilisateur
 botDiscord.on('guildMemberAdd', function(member){
     const r = member.guild.roles.cache.find(role => role.name === "Membre");
+    const serverName = botDiscord.guilds.cache.first().name;
+    const serverMemberCount = botDiscord.guilds.cache.first().memberCount;
+    const serverOwnerName = botDiscord.guilds.cache.first().owner.user.username;
     if(r) member.roles.add(r);
     member.createDM().then(function(channel){
-        return channel.send('Salut '+member.displayName+' !\nBienvenue sur le serveur Discord de <votre nom> !');
+        return channel.send('Salut '+member.displayName+' !\nBienvenue sur le serveur Discord de '+serverOwnerName+' !\n'+
+                            'Vous êtes le '+serverMemberCount+'e membre de '+serverName+' !');
     });
 })
