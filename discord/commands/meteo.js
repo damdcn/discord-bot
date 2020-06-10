@@ -1,5 +1,7 @@
 const https = require('https'); 
 
+const apiKey = 'YOUR API KEY HERE';
+
 module.exports = {
     name : 'meteo',
     description: 'Donne la météo selon la ville',
@@ -10,12 +12,8 @@ module.exports = {
         const args = message.content.split(" ");
         if(!args[1]) return message.channel.send(':stop_sign: Veuillez renseignez une ville (ex: !meteo Paris)');
 
-        var url = 'https://www.prevision-meteo.ch/services/json/'+args[1].trim();
-        var loadMsg = null;
-        message.channel.send(':arrows_counterclockwise: Recherche pour la ville : ``'+args[1]+'``').then(sent => {
-            loadMsg = sent;
-        });
-        message.channel.startTyping();
+        var url = 'https://api.openweathermap.org/data/2.5/weather?q='+args[1].trim()+'&units=metric&appid='+apiKey+'&lang=fr';
+
         https.get(url, function(res){
             var body = '';
 
@@ -25,15 +23,15 @@ module.exports = {
 
             res.on('end', function(){
                 var obj = JSON.parse(body);
-                if(typeof obj.current_condition != 'undefined'){
-                    var temp = obj.current_condition.tmp;
-                    var condition = obj.current_condition.condition
-                    var name = obj.city_info.name;
-                    message.channel.stopTyping();
-                    loadMsg.edit(":sun_with_face: Aujourd'hui à "+name+" : "+condition+", "+temp+"°C !");
+                if(obj.cod == 200){
+                    var temp = Math.round(obj.main.temp);
+                    var condition = obj.weather[0].description[0].toUpperCase()+obj.weather[0].description.slice(1);
+                    var name = obj.name;
+                    message.channel.send(":sun_with_face: Aujourd'hui à "+name+" : "+condition+", "+temp+"°C !");
+                } else if (obj.cod == 404) {
+                    message.channel.send(":sun_with_face: Désolé, "+args[1].trim()+" est introuvable..");
                 } else {
-                    message.channel.stopTyping();
-                    loadMsg.edit(":sun_with_face: Désolé, "+args[1].trim()+" est introuvable..");
+                    message.channel.send(":sun_with_face: Désolé, une erreur est survenue lors de la recherche pour \""+args[1].trim()+"\"");
                 }
             });
         }).on('error', function(e){
