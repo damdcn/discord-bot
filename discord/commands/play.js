@@ -51,8 +51,8 @@ module.exports = {
       if(validYoutubeURL(args[1])) {
         songInfo = await ytdl.getInfo(args[1]);
         song = {
-          title: songInfo.title,
-          url: songInfo.video_url
+          title: songInfo.player_response.videoDetails.title,
+          url: args[1]
         };
       } else {
         songInfo = await yts(args2);
