@@ -1,6 +1,8 @@
 const { MessageEmbed } = require('discord.js');
 const fortnite = require('fortnite');
-const client = new fortnite("87122771-dc3e-442b-94b5-ea6b394b7b52");
+const { getAuthKeys } = require('../../tokens');
+const client = new fortnite(getAuthKeys().api_key_fortnite);
+const fortniteData = require('../../src/fortnite.json');
 
 module.exports = {
     name : 'fortnite',
@@ -18,15 +20,15 @@ module.exports = {
 
             const embed = new MessageEmbed()
             .setColor("00e608")
-            .setAuthor(`Stats Fortnite | ${args[1]}`, 'https://pbs.twimg.com/profile_images/1229088135600013314/h0e61PAN_400x400.jpg')
-            .setThumbnail("https://www.maviedebambi.com/wp-content/uploads/2019/06/bus-fortnite-1024x860.png")
+            .setAuthor(`Stats Fortnite | ${args[1]}`, fortniteData.author_pic)
+            .setThumbnail(fortniteData.thumbnail_pic)
             .setDescription(`**Top 1** : ${wins || "??"}
                              **Top 5** : ${top_5 || "??"}
                              **Top 25** : ${top_25 || "??"}
                              **Kills** : ${kills || "??"}
                              **K/D Ratio** : ${kd || "??"}
                              **Parties jouées** : ${matches || "??"}\n`)
-            .setFooter("MozzyBot")
+            .setFooter(bot.user.username)
             .setTimestamp()
 
             message.channel.send(embed);

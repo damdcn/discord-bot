@@ -1,11 +1,14 @@
 const fs = require('fs');
 const Discord = require('discord.js');
 const Client = require('./discord/Client');
+const tokens = require('./tokens');
+const authKeys = tokens.getAuthKeys();
+const dataKeys = tokens.getDataKeys();
 
 // Déclaration du bot
 const botDiscord = new Client();
 // Connextion du bot
-botDiscord.login('token');
+botDiscord.login(authKeys.discord_bot_token);
 // Déclaration du tableau de commande
 botDiscord.commands = new Discord.Collection();
 // Initialisation du tableau de commande
@@ -20,7 +23,7 @@ botDiscord.on('ready', () => {
     console.log(`Logged in as ${botDiscord.user.tag}!`);
   });
 
-const prefix = "!";
+const prefix = dataKeys.prefix;
 
 function commandParser(message){
     let prefixEscaped = prefix.replace(/([.?*+^$[\]\\(){}|-])/g, "\\$1");
@@ -52,7 +55,7 @@ botDiscord.on('message', function(message){
 
 // Donne un rôle et souhaite bienvenue à chaque nouvel utilisateur
 botDiscord.on('guildMemberAdd', function(member){
-    const r = member.guild.roles.cache.find(role => role.name === "Membre");
+    const r = member.guild.roles.cache.find(role => role.name === dataKeys.new_user_role);
     const serverName = botDiscord.guilds.cache.first().name;
     const serverMemberCount = botDiscord.guilds.cache.first().memberCount;
     const serverOwnerName = botDiscord.guilds.cache.first().owner.user.username;

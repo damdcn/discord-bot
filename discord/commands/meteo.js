@@ -1,10 +1,11 @@
 const { MessageEmbed } = require('discord.js');
 const { JSDOM } = require( "jsdom" );
 const { exit } = require('process');
+const { getAuthKeys } = require('../../tokens');
 const { window } = new JSDOM( "" );
 const $ = require( "jquery" )( window );
 
-const apiKey = 'YOUR API KEY HERE';
+const apiKey = getAuthKeys().api_key_openweathermap;
 
 
 function getDateUnix(str){
