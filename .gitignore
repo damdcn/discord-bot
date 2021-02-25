@@ -3,7 +3,9 @@
 # keys/tokens/data
 src/authKeys.json
 src/dataKeys.json
-npm.txt
+
+# divers
+test/
 
 # compiled output
 /dist
